@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Mar 11 22:38:40 2019
+Find the freq of the input signal using Zero crossings of the signal 
+@author: VijayB
+"""
 import numpy as np
 from scipy.signal import butter, lfilter, freqz, fftconvolve
 import matplotlib.pyplot as plt
