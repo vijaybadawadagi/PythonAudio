@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Mar 11 22:38:40 2019
-Find the freq of the input signal using Zero crossings of the signal 
+Low pass filter 
+
+Sample to filter the low frequency components from the signal
+add the oder and cutoff as per need
 @author: VijayB
 """
 import numpy as np
