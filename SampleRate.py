@@ -2,6 +2,8 @@
 """
 Created on Mon Mar 11 22:38:40 2019
 
+Find the freq of the input signal using Zero crossings of the signal 
+
 @author: VijayB
 """
 import numpy as np
@@ -19,13 +21,4 @@ indices = find((signal[1:] >= 0) & (signal[:-1] < 0))
 
 crossings = indices
 yy = np.diff(crossings)
-xx = np.mean(yy)
 print('freq', Fs/np.mean(np.diff(crossings)))
-
-signalTrans = np.transpose(signal)
-
-cross = np.sign(signalTrans[:])
-zero = np.where(np.diff(cross) > 0)
-ZC = len(zero)
-
-print('SR',ZC*Fs)
