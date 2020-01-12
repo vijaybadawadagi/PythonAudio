@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jan 10 10:21:59 2020
+
+@author: VijayB
+"""
+
+from scipy.fftpack import fft
+import matplotlib.pyplot as plt
+import random
+import numpy as np
+import wave
+from IPython import get_ipython
+get_ipython().run_line_magic('matplotlib', 'qt')
+
+
+def save_wav(size,signal, fname):
+    f = wave.open(fname,'w')
+    f.setnchannels(1)
+    f.setsampwidth(2)
+    f.setframerate(Fs)
+    f.setnframes(size)
+    f.writeframes(signal)
+    
+def custom_fft(y, fs):
+    y = np.array(y)
+    T = 1.0 / fs
+    print(T)
+    N = y.shape[0]
+    Y    = fft(y)
+    freq = np.fft.fftfreq(len(y), signalLen[1] - signalLen[0])
+    
+    return freq[0:N//2], 2.0/N *np.abs(Y[0:N//2])
+
+Fs = 44800          #Sample Rate
+fundFreq = 1000          #freq
+T = 2     # Time for 20 cycles
+winSize = T*Fs      # Number of bins(samples in T time)
+
+signalLen = np.linspace(0,T,winSize)
+thdNLen = np.linspace(0,T,winSize)
+
+fundamental = np.sin(fundFreq * 2 * np.pi * signalLen) 
+thdN1 = .316 * np.sin(2 * fundFreq * 2 * np.pi * thdNLen)
+noise1 = 0.000008*np.asarray(random.sample(range(0,winSize),winSize))
+
+thdN2 = .316 * np.sin(3 *fundFreq * 2 * np.pi * thdNLen)
+
+thdN3 = .316 * np.sin(4 *fundFreq * 2 * np.pi * thdNLen)
+
+thdN4 =  .316 * np.sin(5 *fundFreq * 2 * np.pi * thdNLen)
+
+signal = fundamental+thdN1+thdN2+thdN3+thdN4+noise1
+
+#Remove DC offset intoduced by signal
+sum =0
+for i in range(winSize):
+    sum = sum + signal[i]
+    
+mean = sum/winSize
+for i in range(winSize):
+    signal[i] =signal[i]-mean
+
+
+plt.figure(1)
+plt.plot(signalLen,signal,'r-')
+plt.xlabel('time(sec)')
+plt.ylabel('Gain')
+plt.title('time domain')
+
+
+X,Y=custom_fft(signal,Fs)
+
+plt.figure(2)
+plt.plot(X,Y,'r-')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Gain')
+plt.title('freq domain')
+plt.grid(True)
+
+save_wav(winSize,signal,'thdN.wav')
